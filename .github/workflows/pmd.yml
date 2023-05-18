@@ -1,0 +1,23 @@
+name: PMD Analysis
+on:
+  push:
+    branches:
+      - master  # Adjust this based on your branch name
+jobs:
+  pmd:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Set up Java
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+      - name: Install PMD
+        run: |
+          wget https://github.com/pmd/pmd/releases/download/pmd_releases%2F6.39.0/pmd-bin-6.39.0.zip
+          unzip pmd-bin-6.39.0.zip
+          rm pmd-bin-6.39.0.zip
+      - name: Run PMD for Apex
+        run: pmd-bin-6.39.0/bin/run.sh pmd -d force-app/main/default/classes -R rulesets/apex/quickstart.xml -f text
